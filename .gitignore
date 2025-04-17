@@ -3,3 +3,4 @@ __pycache__/
 .DS_Store
 db/
 knowledge/
+inputs/raw/ETL_Agreement.csv
