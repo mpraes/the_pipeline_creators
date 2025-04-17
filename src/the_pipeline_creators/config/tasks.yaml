@@ -1,0 +1,95 @@
+# tasks.yaml  ────────────────────────────────────────────────────────────────
+# Todas as saídas vão para a pasta outputs/
+
+##############################################################################
+# 1) DESIGN DO PIPELINE
+##############################################################################
+design_pipeline_task:
+  agent: arquiteto
+  description: >
+    Crie **um único arquivo** `outputs/design_pipeline.md` com a arquitetura
+    detalhada do pipeline de engenharia de dados, contemplando:
+
+      • Objetivo (em português) usando o CSV {csv_path}  
+      • Estágios (read, clean, transform, validate, write)  
+      • Funções/métodos Pandas e Pydantic a empregar  
+      • Esquema de dados de entrada e saída (colunas, tipos)  
+      • Regras de validação (idade > 0, e-mail válido, UF em lista, etc.)  
+      • Estratégias de logging e tratamento de erros  
+      • Boas práticas e cenários de testes unitários/integr. com Pytest  
+
+    Use **Code Writer Tool** com o payload JSON **exato**:
+
+      {"filename": "outputs/design_pipeline.md",
+      "content": "<markdown completo aqui>"}
+
+  tools: []
+  expected_output: Arquivo `outputs/design_pipeline.md` gravado.
+
+##############################################################################
+# 2) IMPLEMENTAÇÃO DO PIPELINE
+##############################################################################
+implement_pipeline_task:
+  agent: engenheiro
+  context: [design_pipeline_task]
+  description: >
+    Gere `outputs/pipeline_dados.py` contendo obrigatoriamente:
+
+      • Funções  : read_data(csv_path), normalize_columns(df), ...
+      • Classe   : Cliente(BaseModel) para validar linhas (Pydantic)  
+      • Função   : process(csv_path, export_dir="outputs") -> pd.DataFrame  
+      • Bloco    : if __name__ == "__main__": que executa o fluxo completo  
+      • Logging  : nível INFO, handler único em stdout  
+      • 100 % de type-hints + docstrings estilo Google  
+      • Levanta FileNotFoundError se csv_path inexistir  
+
+    Use **Code Writer Tool** com o payload:
+
+      {"filename": "outputs/pipeline_dados.py",
+      "content": "<código Python completo aqui>"}
+
+  tools: []
+  expected_output: Arquivo `outputs/pipeline_dados.py` gravado.
+
+##############################################################################
+# 3) TESTES COM PYTEST
+##############################################################################
+write_tests_task:
+  agent: tester
+  context: [implement_pipeline_task, design_pipeline_task]
+  description: >
+    Escreva um script completo usando pytest de nome `outputs/test_pipeline.py` cobrindo pelo menos os itens abaixxo:
+
+      • Fixture csv_tmp(tmp_path) que copia {{csv_path}}  
+      • Teste leitura OK (DataFrame não vazio)  
+      • Teste validação negativa (idade < 0 dispara ValidationError)  
+      • Teste deduplicação (len pós-processo < len bruta)  
+      • Teste export Parquet gerado em outputs/  
+
+    Use **Code Writer Tool**:
+
+      {"filename": "outputs/test_pipeline.py",
+      "content": "<código pytest completo aqui>"}
+
+  tools: []
+  expected_output: Arquivo `outputs/test_pipeline.py` gravado.
+
+##############################################################################
+# 4) REVISÃO DE CÓDIGO (Opcional)
+##############################################################################
+review_code_task:
+  agent: revisor
+  context: [implement_pipeline_task]
+  description: >
+    Leia `outputs/pipeline_dados.py`. Se encontrar "TODO", "pass" vazio,
+    falta de type-hints ou falha em `python -m py_compile`, gere
+    `outputs/CODE_REVIEW.md` listando cada problema; caso contrário,
+    escreva apenas a palavra **OK** nesse arquivo.
+
+    Use **Code Writer Tool** com:
+
+      {"filename": "outputs/CODE_REVIEW.md",
+      "content": "<relatório de revisão ou 'OK'>"}
+
+  tools: []
+  expected_output: Arquivo `outputs/CODE_REVIEW.md` gravado.

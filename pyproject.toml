@@ -1,0 +1,31 @@
+[project]
+name = "the_pipeline_creators"
+version = "0.1.0"
+description = "the_pipeline_creators using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "chromadb>=0.5.23",
+    "crewai-tools>=0.40.1",
+    "crewai[tools]>=0.108.0,<1.0.0",
+    "embedchain>=0.1.128",
+    "langchain-ollama>=0.3.1",
+    "llama-index>=0.12.30",
+    "llama-index-embeddings-ollama>=0.6.0",
+    "llama-index-vector-stores-chroma>=0.4.1",
+    "pypdf>=5.4.0",
+]
+
+[project.scripts]
+the_pipeline_creators = "the_pipeline_creators.main:run"
+run_crew = "the_pipeline_creators.main:run"
+train = "the_pipeline_creators.main:train"
+replay = "the_pipeline_creators.main:replay"
+test = "the_pipeline_creators.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
